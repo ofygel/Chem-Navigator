@@ -1,10 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;500&display=swap");
 
-:root {
+/* === CSS-переменные ================================================== */
+:root{
   --c-bg:#0b1b28;
   --c-primary:#18d3b3;
   --c-primary-dark:#12a48a;
-  --c-text:#ffffff;
+  --c-text:#fff;
   --c-text-muted:#b5c1c9;
   --c-surface:#132636;
   --c-overlay:rgba(11,27,40,.55);
@@ -12,6 +13,7 @@
   --gutter:24px;
 }
 
+/* === базовая сброска ================================================= */
 *,
 *::before,
 *::after{box-sizing:border-box;}
@@ -23,7 +25,6 @@ html,body{
   color:var(--c-text);
   background:var(--c-bg);
 }
-
 img{display:block;max-width:100%;height:auto;}
 
 .visually-hidden{
@@ -35,7 +36,7 @@ img{display:block;max-width:100%;height:auto;}
   white-space:nowrap;
 }
 
-/* HERO */
+/* === HERO ============================================================ */
 .hero{
   position:relative;
   padding:96px 0 120px;
@@ -45,18 +46,30 @@ img{display:block;max-width:100%;height:auto;}
 }
 .hero__logo{margin:0 0 8px;font:700 48px/1.1 "Montserrat",sans-serif;color:var(--c-primary);}
 .hero__tagline{margin:0 0 40px;font-size:20px;color:var(--c-text-muted);}
-.hero__search{display:flex;justify-content:center;gap:12px;margin-bottom:32px;}
-.hero__search input{width:clamp(240px,40vw,480px);padding:14px 20px;border:none;border-radius:8px;font-size:16px;}
-.hero__search button{padding:14px 28px;border:none;border-radius:8px;background:var(--c-primary);color:#012922;font-weight:600;cursor:pointer;}
 
-/* BUTTONS */
+.hero__search{
+  display:flex;justify-content:center;gap:12px;margin-bottom:32px;
+}
+.hero__search input{
+  width:clamp(240px,40vw,480px);
+  padding:14px 20px;
+  border:none;border-radius:8px;
+  font-size:16px;
+}
+.hero__search button{
+  padding:14px 28px;border:none;border-radius:8px;
+  background:var(--c-primary);color:#012922;
+  font-weight:600;cursor:pointer;
+}
+
+/* === кнопки ========================================================== */
 .btn{display:inline-block;padding:14px 28px;border-radius:8px;font-weight:600;text-decoration:none;transition:background .2s ease;}
 .btn-primary{background:var(--c-primary);color:#012922;}
 .btn-primary:hover{background:var(--c-primary-dark);}
 .btn-secondary{background:var(--c-surface);color:var(--c-text);border:1px solid var(--c-primary);margin-left:12px;}
 .btn-secondary:hover{background:#1d3546;}
 
-/* CATEGORIES */
+/* === КАТЕГОРИИ ======================================================= */
 .categories{padding:80px 0 120px;}
 
 .categories__grid{
@@ -70,23 +83,29 @@ img{display:block;max-width:100%;height:auto;}
 
 .category{
   position:relative;
-  grid-column:span 4;
+  grid-column:span 4;          /* 3 в ряд на desktop */
   aspect-ratio:4/3;
-  background:var(--c-surface);
+  background-color:var(--c-surface);     /* fallback-цвет */
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
   border-radius:16px;
   overflow:hidden;
   text-decoration:none;
   color:var(--c-text);
 }
 
+/* полупрозрачная дымка поверх фото */
 .category::before{
   content:"";
   position:absolute;inset:0;
-  background:inherit center/cover no-repeat;
-  filter:brightness(.55);
-  transition:transform .3s ease;
+  background:rgba(11,27,40,.55);
+  transition:background .3s ease,transform .3s ease;
 }
-.category:hover::before{transform:scale(1.05);}
+.category:hover::before{
+  background:rgba(11,27,40,.3);
+  transform:scale(1.05);
+}
 
 .category__title{
   position:absolute;
@@ -95,12 +114,18 @@ img{display:block;max-width:100%;height:auto;}
   letter-spacing:.3px;
 }
 
-/* FOOTER */
-.footer{background:#09131d;padding:40px 0;text-align:center;font-size:14px;color:var(--c-text-muted);}
+/* === ФУТЕР =========================================================== */
+.footer{
+  background:#09131d;
+  padding:40px 0;
+  text-align:center;
+  font-size:14px;
+  color:var(--c-text-muted);
+}
 .footer a{color:var(--c-primary);text-decoration:none;margin:0 8px;}
 .footer a:hover{text-decoration:underline;}
 
-/* ADAPTIVE */
+/* === адаптив ========================================================= */
 @media(max-width:991px){.category{grid-column:span 6;}}
 @media(max-width:575px){
   .hero__logo{font-size:36px;}
