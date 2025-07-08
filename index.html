@@ -4,76 +4,71 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CHEM-NAVIGATOR – Навигатор химических продуктов</title>
+  <title>CHEM-NAVIGATOR — Навигатор химических продуктов</title>
 
-  <!-- главный стиль -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-
 <body>
-  <!-- ===== HERO ===== -->
+
+  <!-- HERO -->
   <header class="hero">
     <h1 class="hero__logo">CHEM-NAVIGATOR</h1>
-    <p class="hero__tagline">Навигатор химических продуктов</p>
+    <p  class="hero__tagline">Навигатор химических продуктов</p>
 
-    <form class="hero__search" action="#" method="GET">
+    <form class="hero__search" action="#">
       <input type="text" name="q" placeholder="Поиск по CAS или названию…" required />
       <button type="submit">Найти</button>
     </form>
 
     <div class="hero__actions">
-      <a href="#catalog" class="btn btn-primary">Перейти в каталог</a>
-      <a href="#signup"  class="btn btn-secondary">Зарегистрироваться</a>
+      <button type="button" class="btn btn-primary"   id="catalog-btn">Перейти в каталог</button>
+      <button type="button" class="btn btn-secondary" id="signup-btn">Зарегистрироваться</button>
+      <button type="button" class="fab-login"         id="login-btn"  aria-label="Войти"></button>
     </div>
   </header>
 
-  <!-- ===== КАТЕГОРИИ ===== -->
+  <!-- КАТЕГОРИИ -->
   <section id="catalog" class="categories">
     <h2 class="visually-hidden">Категории продукции</h2>
 
     <div class="categories__grid">
-      <a class="category" href="#lab-chem"
-         style="background-image:url('assets/img/lab.jpg');">
+      <a class="category" href="#lab-chem"     style="--bg:url('/assets/img/lab.jpg');">
         <span class="category__title">Лабораторная химия</span>
       </a>
-
-      <a class="category" href="#industrial"
-         style="background-image:url('assets/img/industrial.jpg');">
+      <a class="category" href="#industrial"   style="--bg:url('/assets/img/industrial.jpg');">
         <span class="category__title">Промышленная химия</span>
       </a>
-
-      <a class="category" href="#construction"
-         style="background-image:url('assets/img/construction.jpg');">
+      <a class="category" href="#construction" style="--bg:url('/assets/img/construction.jpg');">
         <span class="category__title">Строительная химия</span>
       </a>
-
-      <a class="category" href="#household"
-         style="background-image:url('assets/img/household.jpg');">
+      <a class="category" href="#household"    style="--bg:url('/assets/img/household.jpg');">
         <span class="category__title">Бытовая химия</span>
       </a>
-
-      <a class="category" href="#controlled"
-         style="background-image:url('assets/img/controlled.jpg');">
+      <a class="category" href="#controlled"   style="--bg:url('/assets/img/controlled.jpg');">
         <span class="category__title">Подконтрольные вещества</span>
       </a>
-
-      <a class="category" href="#lab-services"
-         style="background-image:url('assets/img/services.jpg');">
+      <a class="category" href="#lab-services" style="--bg:url('/assets/img/services.jpg');">
         <span class="category__title">Услуги лабораторий</span>
       </a>
     </div>
   </section>
 
-  <!-- ===== ПОДВАЛ ===== -->
+  <!-- FOOTER -->
   <footer class="footer">
     <nav class="footer__legal">
-      <a href="/privacy.html">Политика конфиденциальности</a>
-      <a href="/offer.html">Публичная оферта</a>
+      <a href="#">Политика конфиденциальности</a>
+      <a href="#">Публичная оферта</a>
     </nav>
-    <p class="footer__copyright">
-      © 2025 ТОО «CHEM-NAVIGATOR». Все права защищены
-    </p>
+    © 2025 ТОО «CHEM-NAVIGATOR». Все права защищены
   </footer>
+
+  <!-- МОДАЛКА -->
+  <div id="modal-overlay" class="modal-overlay" hidden>
+    <div class="modal-box">
+      <button class="modal-close" aria-label="Закрыть">×</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
 
   <script src="assets/js/main.js"></script>
 </body>

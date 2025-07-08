@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;500&display=swap");
+
+/* ===== переменные ===== */
+:root{
+  --c-bg:#0b1b28;
+  --c-primary:#18d3b3;
+  --c-primary-dark:#12a48a;
+  --c-text:#ffffff;
+  --c-text-muted:#b5c1c9;
+  --c-surface:#132636;
+  --c-overlay:rgba(11,27,40,.55);
+  --container-max:1440px;
+  --gutter:24px;
+}
+
+/* ===== базовые ===== */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:"Inter",sans-serif;background:var(--c-bg);color:var(--c-text)}
+img{display:block;max-width:100%}
+.visually-hidden{position:absolute;width:1px;height:1px;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;padding:96px 0 120px;text-align:center;
+  background:linear-gradient(var(--c-overlay),var(--c-overlay)),url("../img/hero-bg.jpg") center/cover no-repeat;
+}
+.hero__logo   {margin:0 0 8px;font:700 48px/1.1 "Montserrat",sans-serif;color:var(--c-primary)}
+.hero__tagline{margin:0 0 40px;font-size:20px;color:var(--c-text-muted)}
+.hero__search{display:flex;justify-content:center;gap:12px;margin-bottom:32px}
+.hero__search input{width:clamp(240px,40vw,480px);padding:14px 20px;border:none;border-radius:8px;font-size:16px}
+.hero__search button{padding:14px 28px;border:none;border-radius:8px;background:var(--c-primary);color:#012922;font-weight:600;cursor:pointer}
+.hero__actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+
+/* ===== кнопки ===== */
+.btn{display:inline-block;padding:14px 28px;border-radius:8px;font-weight:600;text-decoration:none;transition:.2s}
+.btn-primary   {background:var(--c-primary);color:#012922}
+.btn-primary:hover{background:var(--c-primary-dark)}
+.btn-secondary {background:var(--c-surface);color:var(--c-text);border:1px solid var(--c-primary)}
+.btn-secondary:hover{background:#1d3546}
+.btn-google{
+  background:#ffffff;color:#000;border:1px solid #dadce0;
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+}
+.btn-google:hover{background:#f1f3f4}
+
+/* ===== floating login ===== */
+.fab-login{
+  width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--c-primary) url("../img/icons/login.svg") center/24px no-repeat;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);transform:translateY(4px);transition:.25s
+}
+.fab-login:hover{box-shadow:0 6px 18px rgba(0,0,0,.45);transform:translateY(0)}
+
+/* ===== категории ===== */
+.categories{padding:80px 0 120px}
+.categories__grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gutter);
+  max-width:var(--container-max);margin:0 auto;padding:0 var(--gutter)
+}
+.category{
+  position:relative;grid-column:span 4;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
+  background-color:var(--c-surface);background-size:cover;background-position:center;
+  text-decoration:none;color:var(--c-text);transition:transform .3s
+}
+.category:hover{transform:translateY(-6px)}
+.category::before{
+  content:"";position:absolute;inset:0;
+  background:var(--bg,url("../img/placeholder.jpg")) center/cover no-repeat;
+  filter:grayscale(10%) brightness(.9)
+}
+.category::after{
+  content:"";position:absolute;inset:0;background:rgba(0,0,0,.08);transition:.3s}
+.category:hover::after{background:rgba(0,0,0,.03)}
+.category__title{position:absolute;inset:auto 16px 16px;font:700 22px/1.3 "Montserrat",sans-serif}
+
+/* адаптив сетки */
+@media(max-width:991px){.category{grid-column:span 6}}
+@media(max-width:575px){.category{grid-column:span 12}}
+
+/* ===== модалка ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.65);
+  display:flex;align-items:center;justify-content:center
+}
+.modal-overlay[hidden]{display:none;}
+.modal-box{
+  width:700px;max-width:90%;padding:32px;
+  background:transparent;border:2px solid rgba(255,255,255,.25);border-radius:16px;
+  color:#ffffff;backdrop-filter:blur(12px) saturate(140%);
+  position:relative
+}
+.modal-close{
+  position:absolute;top:12px;right:16px;background:none;border:none;
+  font-size:32px;line-height:1;color:#ffffff;cursor:pointer
+}
+.modal-box input{
+  width:100%;padding:14px;border-radius:8px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.35);
+  color:#fff;font-size:15px
+}
+.modal-box input::placeholder{color:#d2d7db}
+
+/* ===== footer ===== */
+.footer{text-align:center;padding:32px 0 48px;font-size:14px;color:#8596a5}
+.footer__legal{margin-bottom:8px}
+.footer__legal a{color:#8596a5;text-decoration:none;margin:0 6px}
+.footer__legal a:hover{text-decoration:underline}
