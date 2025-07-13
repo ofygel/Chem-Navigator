@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Конфигурация Supabase
-  const SUPABASE_URL = 'https://djiliffgqzzfvdoeckud.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqaWxpZmZncXp6ZnZkb2Vja3VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODk3NDMsImV4cCI6MjA2NzU2NTc0M30.GXDKlvvNdLpn_ecqqRBt3_1MgxQp3TNRRCkpGGvfmj0';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+ const SUPABASE_URL = 'https://djiliffgqzzfvdoeckud.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqaWxpZmZncXp6ZnZkb2Vja3VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODk3NDMsImV4cCI6MjA2NzU2NTc0M30.GXDKlvvNdLpn_ecqqRBt3_1MgxQp3TNRRCkpGGvfmj0';
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 
   // Константы и переменные
   let currentUser = null;
