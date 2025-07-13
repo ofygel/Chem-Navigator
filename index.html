@@ -5,71 +5,96 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CHEM-NAVIGATOR — Навигатор химических продуктов</title>
-
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
 <body>
 
   <!-- HERO -->
   <header class="hero">
-    <h1 class="hero__logo">CHEM-NAVIGATOR</h1>
-    <p  class="hero__tagline">Навигатор химических продуктов</p>
-
-    <form class="hero__search" action="#">
-      <input type="text" name="q" placeholder="Поиск по CAS или названию…" required />
-      <button type="submit">Найти</button>
+    <h1 class="hero__logo" data-i18n="hero_logo">CHEM-NAVIGATOR</h1>
+    <p class="hero__tagline" data-i18n="hero_tagline">Навигатор химических продуктов</p>
+    
+   <form class="hero__search" action="#">
+      <input type="text" name="q" placeholder="Поиск по CAS или названию…" 
+             data-i18n="search_placeholder" required />
+      <button type="submit" data-i18n="search_button">Найти</button>
     </form>
 
     <div class="hero__actions">
-      <button type="button" class="btn btn-primary"   id="catalog-btn">Перейти в каталог</button>
-      <button type="button" class="btn btn-secondary" id="signup-btn">Зарегистрироваться</button>
-      <button type="button" class="fab-login"         id="login-btn"  aria-label="Войти"></button>
+      <button type="button" class="btn btn-primary" id="catalog-btn" data-i18n="catalog_button">Перейти в каталог</button>
+      <button type="button" class="btn btn-secondary" id="signup-btn" data-i18n="signup_button">Зарегистрироваться</button>
+      <button type="button" class="fab-login" id="login-btn" aria-label="Войти" data-i18n="login_button"></button>
+      <button type="button" class="btn btn-secondary" id="cabinet-btn" style="display:none" data-i18n="cabinet_button">Кабинет</button>
     </div>
   </header>
 
   <!-- КАТЕГОРИИ -->
   <section id="catalog" class="categories">
-    <h2 class="visually-hidden">Категории продукции</h2>
+    <h2 class="visually-hidden" data-i18n="product_categories">Категории продукции</h2>
 
     <div class="categories__grid">
-      <a class="category" href="#lab-chem"     style="--bg:url('/assets/img/lab.jpg');">
-        <span class="category__title">Лабораторная химия</span>
+      <a class="category" href="#lab-chem" data-category="lab-chem" style="--bg:url('/assets/img/lab.jpg');">
+        <span class="category__title" data-i18n="lab_chem">Лабораторная химия</span>
       </a>
-      <a class="category" href="#industrial"   style="--bg:url('/assets/img/industrial.jpg');">
-        <span class="category__title">Промышленная химия</span>
+      <a class="category" href="#industrial" data-category="industrial" style="--bg:url('/assets/img/industrial.jpg');">
+        <span class="category__title" data-i18n="industrial_chem">Промышленная химия</span>
       </a>
-      <a class="category" href="#construction" style="--bg:url('/assets/img/construction.jpg');">
-        <span class="category__title">Строительная химия</span>
+      <a class="category" href="#construction" data-category="construction" style="--bg:url('/assets/img/construction.jpg');">
+        <span class="category__title" data-i18n="construction_chem">Строительная химия</span>
       </a>
-      <a class="category" href="#household"    style="--bg:url('/assets/img/household.jpg');">
-        <span class="category__title">Бытовая химия</span>
+      <a class="category" href="#household" data-category="household" style="--bg:url('/assets/img/household.jpg');">
+        <span class="category__title" data-i18n="household_chem">Бытовая химия</span>
       </a>
-      <a class="category" href="#controlled"   style="--bg:url('/assets/img/controlled.jpg');">
-        <span class="category__title">Подконтрольные вещества</span>
+      <a class="category" href="#controlled" data-category="controlled" style="--bg:url('/assets/img/controlled.jpg');">
+        <span class="category__title" data-i18n="controlled_substances">Подконтрольные вещества</span>
       </a>
-      <a class="category" href="#lab-services" style="--bg:url('/assets/img/services.jpg');">
-        <span class="category__title">Услуги лабораторий</span>
+      <a class="category" href="#lab-services" data-category="lab-services" style="--bg:url('/assets/img/services.jpg');">
+        <span class="category__title" data-i18n="lab_services">Услуги лабораторий</span>
       </a>
     </div>
   </section>
 
+<!-- Страница товара -->
+<div id="product-page" class="hidden">
+  <div class="product-header">
+    <button class="back-btn" data-i18n="back_button">&larr; Назад</button>
+    <h2 class="product-name"></h2>
+  </div>
+  
+  <div class="product-gallery">
+    <!-- Слайдер изображений -->
+  </div>
+  
+  <div class="product-info">
+    <div class="product-meta">
+      <span class="cas-number"></span>
+      <span class="category"></span>
+    </div>
+    
+    <div class="sellers-list">
+      <h3 data-i18n="sellers">Продавцы</h3>
+      <!-- Динамически генерируемые карточки продавцов -->
+    </div>
+  </div>
+</div>
+  
   <!-- FOOTER -->
   <footer class="footer">
     <nav class="footer__legal">
-      <a href="#">Политика конфиденциальности</a>
-      <a href="#">Публичная оферта</a>
+      <a href="#" data-i18n="privacy_policy">Политика конфиденциальности</a>
+      <a href="#" data-i18n="public_offer">Публичная оферта</a>
     </nav>
-    © 2025 ТОО «CHEM-NAVIGATOR». Все права защищены
+    <span data-i18n="copyright">© 2025 ТОО «CHEM-NAVIGATOR». Все права защищены</span>
   </footer>
 
   <!-- МОДАЛКА -->
   <div id="modal-overlay" class="modal-overlay" hidden>
     <div class="modal-box">
-      <button class="modal-close" aria-label="Закрыть">×</button>
+      <button class="modal-close" aria-label="Закрыть" data-i18n="close_button">×</button>
       <div id="modal-content"></div>
     </div>
   </div>
 
-  <script src="assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
