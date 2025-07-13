@@ -56,5 +56,6 @@
   "public_offer": "Публичная оферта",
   "copyright": "© 2025 ТОО «CHEM-NAVIGATOR». Все права защищены",
   "close_button": "×",
-  "product_categories": "Категории продукции"
+  "product_categories": "Категории продукции",
+  "confirm_email_message": "Пожалуйста, проверьте вашу электронную почту для подтверждения регистрации."
 }

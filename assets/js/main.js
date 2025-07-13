@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Конфигурация Supabase
+  const SUPABASE_URL = 'https://djiliffgqzzfvdoeckud.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqaWxpZmZncXp6ZnZkb2Vja3VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODk3NDMsImV4cCI6MjA2NzU2NTc0M30.GXDKlvvNdLpn_ecqqRBt3_1MgxQp3TNRRCkpGGvfmj0';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   // Константы и переменные
-  const API_URL = 'http://localhost:5000/api';
   let currentUser = null;
   
   // ===================== МУЛЬТИЯЗЫЧНОСТЬ =====================
@@ -108,19 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Проверка авторизации
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem('chem_token');
-      if (!token) return null;
-      
-      const response = await fetch(`${API_URL}/me`, {
-        headers: { 'Authorization': token }
-      });
-      
-      if (!response.ok) {
-        localStorage.removeItem('chem_token');
-        return null;
-      }
-      
-      return await response.json();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      return data.user;
     } catch (err) {
       console.error('Auth check failed:', err);
       return null;
@@ -139,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       signupBtn.style.display = 'none';
       loginBtn.style.display = 'none';
       cabinetBtn.style.display = '';
-      cabinetBtn.textContent = translations.cabinet_button;
+      cabinetBtn.textContent = translations.cabinet_button || 'Кабинет';
     } else {
       signupBtn.style.display = '';
       loginBtn.style.display = '';
@@ -147,8 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Обновляем тексты кнопок
-    signupBtn.textContent = translations.signup_button;
-    if (document.getElementById('catalog-btn')) {
+    if (translations.signup_button) {
+      signupBtn.textContent = translations.signup_button;
+    }
+    if (document.getElementById('catalog-btn') && translations.catalog_button) {
       document.getElementById('catalog-btn').textContent = translations.catalog_button;
     }
   };
@@ -163,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <button type="button" class="btn btn-primary" id="login-submit" style="width:100%;margin-top:16px" data-i18n="login_title"></button>
         <div class="auth-divider">${currentLang === 'ru' ? 'или' : 'немесе'}</div>
         <button type="button" class="btn btn-google" style="width:100%">
-          <img src="assets/img/icons/google.svg" alt="Google" width="24" style="vertical-align:middle">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="18" style="vertical-align:middle">
           <span data-i18n="login_google"></span>
         </button>
       </div>
@@ -178,18 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = document.getElementById('login-password').value;
       
       try {
-        const response = await fetch(`${API_URL}/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
         });
         
-        if (!response.ok) {
-          throw new Error(currentLang === 'ru' ? 'Ошибка входа' : 'Кіру қатесі');
+        if (error) {
+          throw new Error(error.message || (currentLang === 'ru' ? 'Ошибка входа' : 'Кіру қатесі'));
         }
         
-        const user = await response.json();
-        localStorage.setItem('chem_token', user.id);
+        currentUser = data.user;
         modalOverlay.hidden = true;
         updateAuthState();
       } catch (err) {
@@ -268,27 +262,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       try {
-        const response = await fetch(`${API_URL}/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            email, 
-            password,
-            role: isSeller ? 'seller' : 'user',
-            company: isSeller ? companyName : undefined,
-            address: isSeller ? companyAddress : undefined
-          })
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              role: isSeller ? 'seller' : 'user',
+              company: isSeller ? companyName : null,
+              address: isSeller ? companyAddress : null
+            }
+          }
         });
         
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || (currentLang === 'ru' ? 'Ошибка регистрации' : 'Тіркеу қатесі'));
+        if (error) {
+          throw new Error(error.message || (currentLang === 'ru' ? 'Ошибка регистрации' : 'Тіркеу қатесі'));
         }
         
-        const user = await response.json();
-        localStorage.setItem('chem_token', user.id);
-        modalOverlay.hidden = true;
-        updateAuthState();
+        if (data.user) {
+          currentUser = data.user;
+          alert(currentLang === 'ru' 
+            ? 'Регистрация успешна! Проверьте почту для подтверждения.' 
+            : 'Тіркелу сәтті аяқталды! Растау үшін электрондық поштаңызды тексеріңіз.');
+          modalOverlay.hidden = true;
+          updateAuthState();
+        }
       } catch (err) {
         alert(err.message);
       }
@@ -299,21 +296,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const showCabinet = () => {
     if (!currentUser) return;
     
+    // Извлекаем метаданные пользователя
+    const metadata = currentUser.user_metadata || {};
+    const role = metadata.role || 'user';
+    const company = metadata.company || '';
+    const address = metadata.address || '';
+    
     // Кабинет продавца
-    if (currentUser.role === 'seller') {
+    if (role === 'seller') {
       modalContent.innerHTML = `
         <div class="cabinet-container">
           <h2 style="margin-top:0;text-align:center" data-i18n="cabinet_button"></h2>
           
           <div class="user-info">
             <div class="user-avatar">
-              <img src="https://ui-avatars.com/api/?name=${currentUser.company || currentUser.name}&background=18d3b3&color=fff" alt="Аватар">
+              <img src="https://ui-avatars.com/api/?name=${company || currentUser.email}&background=18d3b3&color=fff" alt="Аватар">
             </div>
             <div class="user-details">
-              <h3>${currentUser.company || currentUser.name}</h3>
+              <h3>${company || currentUser.email}</h3>
               <p>${currentUser.email}</p>
               <p>${currentLang === 'ru' ? 'Роль' : 'Рөл'}: ${currentLang === 'ru' ? 'Продавец' : 'Сатушы'}</p>
-              ${currentUser.address ? `<p>${currentUser.address}</p>` : ''}
+              ${address ? `<p>${address}</p>` : ''}
             </div>
           </div>
           
@@ -334,13 +337,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3 data-i18n="settings"></h3>
             <div class="form-group">
               <label>${currentLang === 'ru' ? 'Название компании' : 'Компания атауы'}</label>
-              <input type="text" value="${currentUser.company || ''}">
+              <input type="text" id="company-name-input" value="${company}">
             </div>
             <div class="form-group">
               <label>${currentLang === 'ru' ? 'Адрес' : 'Мекенжай'}</label>
-              <input type="text" value="${currentUser.address || ''}">
+              <input type="text" id="company-address-input" value="${address}">
             </div>
-            <button class="btn btn-primary" data-i18n="save"></button>
+            <button class="btn btn-primary" id="save-settings" data-i18n="save"></button>
           </div>
           
           <button class="btn btn-primary" id="logout-btn" style="margin-top:20px" data-i18n="logout"></button>
@@ -355,10 +358,10 @@ document.addEventListener('DOMContentLoaded', () => {
           
           <div class="user-info">
             <div class="user-avatar">
-              <img src="https://ui-avatars.com/api/?name=${currentUser.name}&background=18d3b3&color=fff" alt="Аватар">
+              <img src="https://ui-avatars.com/api/?name=${currentUser.email}&background=18d3b3&color=fff" alt="Аватар">
             </div>
             <div class="user-details">
-              <h3>${currentUser.name}</h3>
+              <h3>${currentUser.email.split('@')[0]}</h3>
               <p>${currentUser.email}</p>
               <p>${currentLang === 'ru' ? 'Роль' : 'Рөл'}: ${currentLang === 'ru' ? 'Покупатель' : 'Сатып алушы'}</p>
             </div>
@@ -378,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTranslations();
     
     // Переключение вкладок (для продавца)
-    if (currentUser.role === 'seller') {
+    if (role === 'seller') {
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -391,13 +394,55 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Кнопка добавления товара
       document.getElementById('add-product')?.addEventListener('click', showProductForm);
+      
+      // Сохранение настроек
+      document.getElementById('save-settings')?.addEventListener('click', async () => {
+        const companyName = document.getElementById('company-name-input').value;
+        const companyAddress = document.getElementById('company-address-input').value;
+        
+        try {
+          const { error } = await supabase.auth.updateUser({
+            data: {
+              company: companyName,
+              address: companyAddress
+            }
+          });
+          
+          if (error) throw error;
+          
+          // Обновляем локальные данные
+          currentUser.user_metadata = {
+            ...currentUser.user_metadata,
+            company: companyName,
+            address: companyAddress
+          };
+          
+          alert(currentLang === 'ru' 
+            ? 'Настройки сохранены!' 
+            : 'Баптаулар сақталды!');
+        } catch (err) {
+          alert(currentLang === 'ru' 
+            ? 'Ошибка сохранения: ' + err.message 
+            : 'Сақтау қатесі: ' + err.message);
+        }
+      });
     }
     
     // Выход из системы
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      localStorage.removeItem('chem_token');
-      modalOverlay.hidden = true;
-      updateAuthState();
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        
+        currentUser = null;
+        modalOverlay.hidden = true;
+        updateAuthState();
+      } catch (err) {
+        console.error('Logout error:', err);
+        alert(currentLang === 'ru' 
+          ? 'Ошибка выхода: ' + err.message 
+          : 'Шығу қатесі: ' + err.message);
+      }
     });
   };
   
@@ -623,15 +668,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ========= Открытие мини-плиток ========= */
   document.querySelectorAll('.category').forEach(card => {
-     const href = card.getAttribute('href');
-  if (!href) return; // ← защита от null
-
-  const categoryId = href.replace('#', '');
-  card.addEventListener('click', (e) => {
-    e.preventDefault();
-    openMini(card, categoryId);
+    const categoryId = card.getAttribute('href').replace('#', '');
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      openMini(card, categoryId);
+    });
   });
-});
 
   async function openMini(card, categoryId) {
     const { left, top, width, height } = card.getBoundingClientRect();
@@ -692,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Если нет товаров
     if (products.length === 0) {
       const emptyMsg = document.createElement('p');
-      emptyMsg.textContent = translations.no_products;
+      emptyMsg.textContent = translations.no_products || 'Нет товаров в этой категории';
       emptyMsg.style.color = '#fff';
       emptyMsg.style.textAlign = 'center';
       emptyMsg.style.width = '100%';
